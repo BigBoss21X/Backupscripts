@@ -1,0 +1,44 @@
+#setting up
+from time import sleep
+from random import randint
+
+#users guess
+def get_guess():
+    user_guess=int(raw_input("Enter your guess "))
+    return user_guess
+
+#roll dice
+def roll_dice(number_of_sides):
+    roll_one=randint(1,number_of_sides)
+    roll_two=randint(1,number_of_sides)
+    max_val=number_of_sides*2
+
+    print "Max guess is " + str(max_val)
+    sleep(.1)
+    user_guess=get_guess()
+    if user_guess > max_val:
+        print "Your guess is too high buddy "
+	return
+    elif str(user_guess).isalpha():
+	print "You're an idiot "
+	return
+    else:
+	print "Rolling..."
+	sleep(2)
+	print "The result of roll one is %d " % roll_one
+	sleep(1)
+	print "The result of roll two is %d " % roll_two
+	sleep(1)
+	total_roll=roll_one + roll_two
+	print "Total of rolls is " + str(total_roll)
+	sleep(1)
+	if user_guess > total_roll:
+	    print "We have a weiner..."
+	    return
+	else:
+	    print "Hah! Loser!"
+	    return
+
+#start game
+
+roll_dice(6)
