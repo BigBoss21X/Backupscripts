@@ -1,0 +1,4 @@
+#!/bin/bash
+#Run two scripts
+python /home/master/scripts/python_scripts/button_backandforth.py &
+python /home/master/scripts/python_scripts/thermistor.py &

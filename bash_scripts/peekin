@@ -1,0 +1,4 @@
+#!/bin/bash
+#tmux new -d -s picnow1 'sudo python /home/master/PeekIn/postpic.py'
+#tmux detach -s picnow1
+python /home/master/PeekIn/postpic.py

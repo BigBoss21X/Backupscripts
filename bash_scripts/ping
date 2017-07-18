@@ -1,0 +1,4 @@
+#!/bin/bash
+#Run two scripts
+python /home/master/ping.py &
+#python /home/pi/scripts/python_scripts/thermistor.py &

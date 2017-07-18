@@ -1,0 +1,2 @@
+#!/bin/bash
+python /home/master/testgpio32.py
