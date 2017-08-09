@@ -8,16 +8,18 @@ from subprocess import call
 import sys
 from datetime import datetime
 import requests
+import os
 
-
-current_dir = os.path.dirname(os.path.realpath(__file__))
-filename = "/home/master/Documents/instantpic_temp.txt"
+localuser = os.path.dirname(os.path.realpath(__file__)).split('/')[2]
+#current_dir = os.path.dirname(os.path.realpath(__file__))
+filename = '/home/' + localuser + '/Documents/instantpic_temp.txt'
+integconfig = '/home/' + localuser + '/Desktop/integ.txt'
 camera = PiCamera()
 camera.rotation = 180
+camera.resolution = (1280, 720)
 
-host = 'biologywatcher.ddns.net'
-port = '2122'
-server = 'http://integratedtech.ddns.net/accounts/api/peekin'
+endurl = '/accounts/api/peekin'
+
 
 def setup2():
     with open(filename,"w") as writefile:
@@ -25,23 +27,31 @@ def setup2():
         writefile.close()
     setup()
 
+
 def setup():
     if os.path.exists(filename) != 1:
         setup2()
     else:
         global picnum
+        global host
+        global port
+        global server
         picnum = int(open(filename,"r").readlines()[0])    
+        with open(integconfig) as integconf:
+            contents = integconf.read()
+            host = contents.split("\n")[2]
+            port = contents.split("\n")[1]
+            server = contents.split("\n")[3] + endurl
+
 
 def loop(picnum):
-#            uppath = current_dir + "/dropbox_uploader.sh upload "
-#    while True:
+
     try:
             timenow = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             data = {'host': host, 'timenow': timenow, 'port': port}
             picnum += 1
             camera.annotate_text=str(timenow)
-            picfile = '/home/master/Desktop/Pictures/image%s.jpg' % picnum
-
+            picfile = '/home/' + localuser + '/Desktop/Pictures/image%s.jpg' % picnum
             camera.capture(picfile)
             with open(filename,"w") as writefile:
                 writefile.write(str(picnum))
@@ -50,7 +60,7 @@ def loop(picnum):
             files = {'file':(picfile, open(picfile, 'rb'))}
 
             try:
-#                call([uppath + picfile + " image" + str(picnum) + ".jpg"],shell=True)
+#                print(host,port)
                 conn = requests.post(server, data=data, files=files)
             except:
                 print "upload failed"
@@ -58,8 +68,11 @@ def loop(picnum):
             destroy()
     except:
         destroy()
+
+
 def destroy():
     sys.exit()
+
 
 if __name__ == '__main__':
     setup()
